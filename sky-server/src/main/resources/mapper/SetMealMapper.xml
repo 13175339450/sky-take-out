@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace = *接口* 的全限定符 -->
+<mapper namespace="com.sky.mapper.SetMealMapper">
+    <!-- 查询id绑定的套参数 -->
+    <select id="queryById" resultType="java.lang.Integer">
+        select count(*) from setmeal
+        where category_id = #{id}
+    </select>
+</mapper>

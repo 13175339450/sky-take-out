@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace = *接口* 的全限定符 -->
+<mapper namespace="com.sky.mapper.DishMapper">
+
+    <!-- 新增口味 -->
+    <insert id="saveFlavor">
+
+    </insert>
+    <!-- 新增菜品 要主键回显 分配的菜品id (Dish类里的id == dishId)
+         useGeneratedKeys="true" 开启主键回显
+         keyProperty="id" 将回显的主键赋值给 id属性
+    -->
+    <insert id="saveDish" useGeneratedKeys="true" keyProperty="id">
+        insert into dish(id, name, category_id, price, image, description, status, create_time, update_time,
+        create_user, update_user)
+        values(default, #{name}, #{categoryId}, #{price}, #{image}, #{description}, #{status}, #{createTime},
+        #{updateTime}, #{createUser}, #{updateUser})
+    </insert>
+
+
+    <!-- 查询 id 的菜品数-->
+    <select id="queryById" resultType="java.lang.Integer">
+        select count(*) from dish
+        where category_id = #{id}
+    </select>
+</mapper>

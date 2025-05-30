@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace = *接口* 的全限定符 -->
+<mapper namespace="com.sky.mapper.CategoryMapper">
+    <!-- 新增分类 -->
+    <insert id="insertCategory">
+        <!-- 前端页面的操作时间设置为 update_time 所以第一次创建时 需要将createTime -> update_time  BUG -->
+        insert into category(id, name, sort, type, create_user, create_time, status, update_user, update_time)
+        values(default, #{name}, #{sort}, #{type}, #{createUser}, #{createTime}, #{status}, #{updateUser},
+        #{updateTime});
+    </insert>
+
+    <!-- 根据id删除分类 -->
+    <delete id="deleteCategoryById">
+        delete from category where id = #{id}
+    </delete>
+
+    <!-- 分类菜品的分页查询-->
+    <select id="queryPage" resultType="com.sky.entity.Category">
+        select * from category
+        <where>
+            <!-- 根据分类名称进行匹配 -->
+            <if test="name != null">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <!-- 根据分类类型进行匹配 -->
+            <if test="type != null">
+                and type = #{type}
+            </if>
+        </where>
+        <!-- 按给定的排序列进行升序-->
+        order by sort asc
+
+    </select>
+    <select id="queryByList" resultType="com.sky.entity.Category">
+        select * from category where type = #{type}
+    </select>
+    <!-- 根据类型查询分类 -->
+
+
+    <!-- 分类菜品的通用更新方法 -->
+    <update id="updateCategoryInfo">
+        update category
+        <set>
+            <if test="type != null">
+                , type = #{type}
+            </if>
+            <if test="name != null">
+                , name = #{name}
+            </if>
+            <if test="sort != null">
+                , sort = #{sort}
+            </if>
+            <if test="status != null">
+                , status = #{status}
+            </if>
+            <if test="updateTime != null">
+                , update_time = #{updateTime}
+            </if>
+            <if test="updateUser != null">
+                , update_user = #{updateUser}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>
