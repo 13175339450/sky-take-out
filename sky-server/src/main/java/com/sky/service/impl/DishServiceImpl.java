@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -135,9 +136,69 @@ public class DishServiceImpl implements DishService {
      * @return
      */
     @Override
-    public Result updateDishStatus(Integer status, Integer id) {
+    public Result updateDishStatus(Integer status, Long id) {
         int row = dishMapper.updateDishStatus(status, id);
         if (row > 0) return Result.success();
         return Result.error("商品状态修改失败");
+    }
+
+    /**
+     * 根据id查询菜品 (基本信息 + 口味信息)
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public Result queryDishFlavorById(Long id) {
+        DishVO dishVO = new DishVO();
+        //1.根据id查询基本菜品信息
+        Dish dish = dishMapper.queryById(id);
+
+        //2.属性拷贝
+        BeanUtils.copyProperties(dish, dishVO);
+
+        //3.根据dishId查询口味信息
+        List<DishFlavor> flavors = dishFlavorMapper.queryFlavorById(id);
+
+        //4.赋值
+        dishVO.setFlavors(flavors);
+
+        return Result.success(dishVO);
+    }
+
+    /**
+     * 修改菜品
+     *
+     * @param dishDTO
+     * @return
+     */
+    @Transactional//加入事务管理
+    @Override
+    public Result updateDishInfo(DishDTO dishDTO) {
+        //1.将传入的修改后的信息 封装到dish里
+        Dish dish = new Dish();
+        BeanUtils.copyProperties(dishDTO, dish);
+
+        //2.更新数据 基本菜品信息数据
+        int row1 = dishMapper.updateDishBaseInfo(dish);
+
+        //3.删除旧的口味数据
+        int row2 = dishFlavorMapper.deleteById(dishDTO.getId());
+
+        //4.获取新的口味信息
+        List<DishFlavor> flavors = dishDTO.getFlavors();
+
+        //5.将口味信息更新
+        if(flavors != null && flavors.size() > 0){
+            //1.更新dishId
+            for (DishFlavor flavor : flavors) {
+                flavor.setDishId(dishDTO.getId());
+            }
+            //插入新的口味信息
+            int row3 = dishFlavorMapper.saveBatch(flavors);
+        }
+
+        if(row1 > 0) return Result.success();
+        return Result.error("更新信息失败!");
     }
 }

@@ -13,6 +13,23 @@
         </foreach>
     </insert>
 
+    <!-- 修改菜品口味 -->
+    <update id="updateFlavor">
+        update dish_flavor
+        <set>
+            <if test="dishId != null">
+                dish_id = #{dishId},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="value != null">
+                value = #{value}
+            </if>
+        </set>
+        where dish_id = #{dishId}
+    </update>
+
     <!-- 根据id批量删除 flavor -->
     <delete id="deleteByIds">
         delete from dish_flavor where dish_id in
@@ -21,7 +38,17 @@
         </foreach>
     </delete>
 
-<!--    &lt;!&ndash; 根据dishId 查询套餐信息 &ndash;&gt;-->
+    <!-- 根据单个id删除口味信息 -->
+    <delete id="deleteById">
+        delete from dish_flavor where dish_id = #{dishId}
+    </delete>
+
+    <!-- 根据dishId 查询口味信息 -->
+    <select id="queryFlavorById" resultType="com.sky.entity.DishFlavor">
+        select * from dish_flavor where dish_id = #{dishId}
+    </select>
+
+    <!--    &lt;!&ndash; 根据dishId 查询套餐信息 &ndash;&gt;-->
 <!--    <select id="queryByIds" resultType="com.sky.entity.DishFlavor">-->
 <!--        select * from dish_flavor where dish_id in-->
 <!--        <foreach collection="ids" open="(" close=")" separator="," item="fla">-->

@@ -55,7 +55,7 @@ public interface DishMapper {
      * @param id
      * @return
      */
-    int updateDishStatus(Integer status, Integer id);
+    int updateDishStatus(Integer status, Long id);
 
     /**
      * 根据categoryId查询是否绑定了菜品
@@ -63,4 +63,13 @@ public interface DishMapper {
      * @return
      */
     List<Dish> queryByCategoryId(Long categoryId);
+
+    /**
+     * 修改数据
+     * @param dish
+     * @return
+     */
+    @AutoFill(OperationType.UPDATE)
+    int updateDishBaseInfo(Dish dish);
+
 }

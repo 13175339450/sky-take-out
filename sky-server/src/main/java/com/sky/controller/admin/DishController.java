@@ -12,9 +12,11 @@ import com.sky.vo.DishVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.List;
 
 /**
@@ -23,7 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("admin/dish")
 @Slf4j
-@Api("菜品相关管理接口")
+@Api(tags = "菜品相关管理接口")
 public class DishController {
 
     @Autowired
@@ -72,9 +74,29 @@ public class DishController {
      */
     @PostMapping("/status/{status}")
     @ApiOperation("起售、停售商品")
-    public Result startOrStop(@PathVariable Integer status, Integer id) {//菜品id
+    public Result startOrStop(@PathVariable Integer status, Long id) {//菜品id
         log.info("状态：{}, 菜品id：{}", status, id);
         Result result = dishService.updateDishStatus(status, id);
+        return result;
+    }
+
+    /**
+     * 根据id查询菜品 (基本信息 + 口味信息)
+     */
+    @GetMapping("{id}")
+    @ApiOperation("根据id查询菜品 (基本信息 + 口味信息)")
+    public Result<DishVO> queryDishAndFlavorById(@PathVariable Long id){
+        Result result = dishService.queryDishFlavorById(id);
+        return result;
+    }
+
+    /**
+     * 修改菜品
+     */
+    @PutMapping
+    @ApiOperation("修改菜品")
+    public Result updateDish(@RequestBody DishDTO dishDTO){
+        Result result = dishService.updateDishInfo(dishDTO);
         return result;
     }
 }
