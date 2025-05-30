@@ -1,20 +1,27 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.dto.DishDTO;
+import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.result.Result;
 import com.sky.service.DishService;
+import com.sky.vo.DishVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service//加入ioc容器
 public class DishServiceImpl implements DishService {
@@ -55,5 +62,26 @@ public class DishServiceImpl implements DishService {
         }
         if (row1 > 0) return Result.success(MessageConstant.DISH_INSERT_SUCCESS);
         return Result.error(MessageConstant.DISH_INSERT_FAIL);
+    }
+
+    /**
+     * 菜品分页查询
+     * @param dto
+     * @return
+     */
+    @Override
+    public Result dishPageQuery(DishPageQueryDTO dto) {
+        //1.设置分页查询的分页数据
+        PageHelper.startPage(dto.getPage(), dto.getPageSize());
+
+        //2.分页查询 格式要正确
+        Page<DishVO> page = dishMapper.dishPageQuery(dto);
+
+        //3.结果封装
+        Map map = new HashMap();
+        map.put("total", page.getTotal());
+        map.put("records", page.getResult());
+
+        return Result.success(map);
     }
 }

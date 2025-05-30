@@ -29,7 +29,7 @@ public class CategoryController {
      */
     @GetMapping("page")
     @ApiOperation("分类的分页查询")
-    public Result page(CategoryPageQueryDTO pageQueryDTO) {//param实体类传参
+    public Result<PageResult> page(CategoryPageQueryDTO pageQueryDTO) {//param实体类传参
         log.info("分页数据: {}", pageQueryDTO);
 
         Result result = categoryService.queryPage(pageQueryDTO);

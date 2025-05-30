@@ -1,10 +1,13 @@
 package com.sky.mapper;
 
+import com.github.pagehelper.Page;
 import com.sky.annotaion.AutoFill;
 import com.sky.dto.DishDTO;
+import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
 import com.sky.enumeration.OperationType;
+import com.sky.vo.DishVO;
 
 import java.util.List;
 
@@ -31,4 +34,11 @@ public interface DishMapper {
      */
     @AutoFill(OperationType.INSERT)
     int saveFlavor(List<DishFlavor> flavors);
+
+    /**
+     * 菜品分页查询
+     * @param dto
+     * @return
+     */
+    Page<DishVO> dishPageQuery(DishPageQueryDTO dto);
 }
