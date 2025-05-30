@@ -12,4 +12,20 @@
             (#{df.dishId}, #{df.name}, #{df.value})
         </foreach>
     </insert>
+
+    <!-- 根据id批量删除 flavor -->
+    <delete id="deleteByIds">
+        delete from dish_flavor where dish_id in
+        <foreach collection="dishId" open="(" close=")" separator="," item="did">
+            #{did}
+        </foreach>
+    </delete>
+
+<!--    &lt;!&ndash; 根据dishId 查询套餐信息 &ndash;&gt;-->
+<!--    <select id="queryByIds" resultType="com.sky.entity.DishFlavor">-->
+<!--        select * from dish_flavor where dish_id in-->
+<!--        <foreach collection="ids" open="(" close=")" separator="," item="fla">-->
+<!--            #{fla}-->
+<!--        </foreach>-->
+<!--    </select>-->
 </mapper>

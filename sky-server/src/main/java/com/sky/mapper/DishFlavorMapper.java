@@ -11,4 +11,18 @@ public interface DishFlavorMapper {
      * @return
      */
     int saveBatch(List<DishFlavor> flavors);
+
+    /**
+     * 根据id 查询套餐信息
+     * @param ids
+     * @return
+     */
+    List<DishFlavor> queryByIds(List<Long> ids);
+
+    /**
+     * 根据ids 删除flavor信息
+     * @param dishId
+     * @return
+     */
+    int deleteByIds(List<Long> dishId);
 }

@@ -15,14 +15,14 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SetmealDish implements Serializable {
+public class SetMealDish implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
 
     //套餐id
-    private Long setmealId;
+    private Long setMealId;
 
     //菜品id
     private Long dishId;

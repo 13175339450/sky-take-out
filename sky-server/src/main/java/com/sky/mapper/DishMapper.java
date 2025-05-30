@@ -13,19 +13,19 @@ import java.util.List;
 
 public interface DishMapper {
     /**
-     * 查询 id对应的菜品数
-     * @param id
-     * @return
-     */
-    int queryById(Long id);
-
-    /**
      * 新增菜品
      * @param dish
      * @return
      */
     @AutoFill(OperationType.INSERT)//标记为插入数据的操作
     int saveDish(Dish dish);
+
+    /**
+     * 查询 菜品id对应的菜品信息
+     * @param id
+     * @return
+     */
+    Dish queryById(Long id);
 
     /**
      * 新增口味
@@ -41,4 +41,26 @@ public interface DishMapper {
      * @return
      */
     Page<DishVO> dishPageQuery(DishPageQueryDTO dto);
+
+    /**
+     * 根据ids删除dish信息
+     * @param ids
+     * @return
+     */
+    int deleteByIds(List<Long> ids);
+
+    /**
+     * 起售或者停售商品
+     * @param status
+     * @param id
+     * @return
+     */
+    int updateDishStatus(Integer status, Integer id);
+
+    /**
+     * 根据categoryId查询是否绑定了菜品
+     * @param categoryId
+     * @return
+     */
+    List<Dish> queryByCategoryId(Long categoryId);
 }

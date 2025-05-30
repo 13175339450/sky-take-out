@@ -7,18 +7,19 @@ import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
+import com.sky.entity.SetMealDish;
+import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
+import com.sky.mapper.SetMealMapper;
 import com.sky.result.Result;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,10 @@ public class DishServiceImpl implements DishService {
 
     @Autowired
     private DishFlavorMapper dishFlavorMapper;
+
+    @Autowired
+    private SetMealMapper setMealMapper;
+
 
     /**
      * 新增菜品和对应口味列表（甜辣温度）
@@ -66,6 +71,7 @@ public class DishServiceImpl implements DishService {
 
     /**
      * 菜品分页查询
+     *
      * @param dto
      * @return
      */
@@ -83,5 +89,55 @@ public class DishServiceImpl implements DishService {
         map.put("records", page.getResult());
 
         return Result.success(map);
+    }
+
+    /**
+     * 批量删除菜品
+     *
+     * @param ids
+     * @return
+     */
+    @Transactional//设置事务
+    @Override
+    public Result deleteBatch(List<Long> ids) {
+        //1.判断当前菜品是否能够删除--是否正在起售？？ (只要有一个菜品在起售，就批量删除失败)
+        for (Long id : ids) {
+            Dish dish = dishMapper.queryById(id);
+            if (dish != null && dish.getStatus() > 0) {
+                //抛出自定义的异常 起售中的套餐不能删除!
+                throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ON_SALE);
+            }
+        }
+
+        //2.判断当前菜品是否能够删除--是否关联了套餐？？(只要一个菜品关联了套餐，就批量删除失败)
+        List<SetMealDish> mealDishList = setMealMapper.queryByIds(ids);
+        if (mealDishList != null && mealDishList.size() > 0) {
+            //抛出自定义的异常 起售中的套餐不能删除!
+            throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_SETMEAL);
+        }
+
+        //3.删除菜品表中的菜品数据
+        int dishRows = dishMapper.deleteByIds(ids);
+
+        //4.删除该菜品关联的口味数据 （可能没有关联）
+        int flavorRows = dishFlavorMapper.deleteByIds(ids);
+
+        if (dishRows > 0) {
+            return Result.success();
+        }
+        return Result.error("异常原因导致删除失败!");
+    }
+
+    /**
+     * 起售、停售商品
+     * @param status
+     * @param id
+     * @return
+     */
+    @Override
+    public Result updateDishStatus(Integer status, Integer id) {
+        int row = dishMapper.updateDishStatus(status, id);
+        if (row > 0) return Result.success();
+        return Result.error("商品状态修改失败");
     }
 }

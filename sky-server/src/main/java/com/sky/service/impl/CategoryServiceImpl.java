@@ -7,6 +7,7 @@ import com.sky.context.BaseContext;
 import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
+import com.sky.entity.Dish;
 import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.CategoryMapper;
 import com.sky.mapper.DishMapper;
@@ -121,10 +122,10 @@ public class CategoryServiceImpl implements CategoryService {
      * 根据id删除分类
      */
     @Override
-    public Result deleteCategoryById(Long id) {
-        //1.先判断该分类是否 绑定了 菜品
-        int dishCounts = dishMapper.queryById(id);
-        if(dishCounts > 0){
+    public Result deleteCategoryById(Long id) {//此id是categoryId
+        //1.先判断该分类ID是否 绑定了 菜品(categoryId)
+        List<Dish> dish = dishMapper.queryByCategoryId(id);
+        if(dish != null){
             //绑定了菜品 抛出异常
             throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_DISH);
         }

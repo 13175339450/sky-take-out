@@ -20,12 +20,28 @@
         #{updateTime}, #{createUser}, #{updateUser})
     </insert>
 
+    <!-- 起售或停售商品 -->
+    <update id="updateDishStatus">
+        update dish set status = #{status}
+        where id = #{id}
+    </update>
 
-    <!-- 查询 id 的菜品数-->
-    <select id="queryById" resultType="java.lang.Integer">
-        select count(*) from dish
-        where category_id = #{id}
+    <!-- 批量删除 -->
+    <delete id="deleteByIds">
+        delete from dish where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="d">
+            #{d}
+        </foreach>
+    </delete>
+
+
+    <!-- 查询 id 菜品-->
+    <select id="queryById" resultType="com.sky.entity.Dish">
+        select * from dish
+        where id = #{id}
+        <!-- Dish菜品里的 id 就是其他表里的dishId -->
     </select>
+
 
     <!-- 菜品分页查询 -->
     <select id="dishPageQuery" resultType="com.sky.vo.DishVO">
@@ -41,5 +57,13 @@
                 and d.status = #{status}
             </if>
         </where>
+        <!-- 根据价格降序排序 -->
+        order by price asc
+    </select>
+
+    <!-- 根据分类categoryId 查询是否绑定了菜品 -->
+    <select id="queryByCategoryId" resultType="com.sky.entity.Dish">
+        select * from dish
+        where category_id = #{categoryId}
     </select>
 </mapper>

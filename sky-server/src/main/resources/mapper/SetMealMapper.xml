@@ -9,4 +9,11 @@
         select count(*) from setmeal
         where category_id = #{id}
     </select>
+    <!-- 查询当前菜品关联的套餐 批量查询 -->
+    <select id="queryByIds" resultType="com.sky.entity.SetMealDish">
+        select * from setmeal_dish where dish_id in
+        <foreach collection="dishIds" open="(" close=")" separator="," item="sd">
+            #{sd}
+        </foreach>
+    </select>
 </mapper>
