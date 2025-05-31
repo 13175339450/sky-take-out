@@ -7,11 +7,11 @@ import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
-import com.sky.entity.SetMealDish;
+import com.sky.entity.SetmealDish;
 import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
-import com.sky.mapper.SetMealMapper;
+import com.sky.mapper.SetmealMapper;
 import com.sky.result.Result;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +34,7 @@ public class DishServiceImpl implements DishService {
     private DishFlavorMapper dishFlavorMapper;
 
     @Autowired
-    private SetMealMapper setMealMapper;
+    private SetmealMapper setMealMapper;
 
 
     /**
@@ -111,7 +110,7 @@ public class DishServiceImpl implements DishService {
         }
 
         //2.判断当前菜品是否能够删除--是否关联了套餐？？(只要一个菜品关联了套餐，就批量删除失败)
-        List<SetMealDish> mealDishList = setMealMapper.queryByIds(ids);
+        List<SetmealDish> mealDishList = setMealMapper.queryByIds(ids);
         if (mealDishList != null && mealDishList.size() > 0) {
             //抛出自定义的异常 起售中的套餐不能删除!
             throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_SETMEAL);
@@ -201,5 +200,16 @@ public class DishServiceImpl implements DishService {
 
         if(row1 > 0) return Result.success();
         return Result.error("更新信息失败!");
+    }
+
+    /**
+     * 根据categoryId查询菜品（为套餐管理的添加套餐服务）
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public Result queryByCategoryId(Long categoryId) {
+        List<Dish> dishList = dishMapper.queryByCategoryId(categoryId);
+        return Result.success(dishList);
     }
 }

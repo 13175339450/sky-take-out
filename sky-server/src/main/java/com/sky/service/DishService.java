@@ -50,4 +50,10 @@ public interface DishService {
      */
     Result updateDishInfo(DishDTO dishDTO);
 
+    /**
+     * 根据categoryId查询菜品信息
+     * @param categoryId
+     * @return
+     */
+    Result queryByCategoryId(Long categoryId);
 }

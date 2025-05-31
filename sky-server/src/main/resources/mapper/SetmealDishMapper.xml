@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace = *接口* 的全限定符 -->
+<mapper namespace="com.sky.mapper.SetmealDishMapper">
+
+    <!-- 批量添加 套餐绑定的菜品信息 -->
+    <insert id="insertSetMealDishBatch">
+        insert into setmeal_dish (setmeal_id, dish_id, name, price, copies)
+        values
+        <foreach collection="setmealDishes" separator="," item="dish">
+            (#{dish.setmealId}, #{dish.dishId}, #{dish.name}, #{dish.price}, #{dish.copies})
+        </foreach>
+    </insert>
+    <!-- 根据setmealId查询setmeal_dish表的相关信息 -->
+    <select id="queryBySetmealId" resultType="com.sky.entity.SetmealDish">
+        select * from setmeal_dish where setmeal_id = #{setmealId}
+    </select>
+
+    <!-- 根据setmealId删除相关联的菜品信息 -->
+    <delete id="deleteBySetmealId">
+        delete from setmeal_dish where setmeal_id = #{setmealId}
+    </delete>
+
+    <!-- 根据setmealIds 批量删除 关联信息 -->
+    <delete id="deleteBatchBySetmealId">
+        delete from setmeal_dish where setmeal_id in
+        <foreach collection="ids" open="(" close=")" separator="," item="ID">
+            #{ID}
+        </foreach>
+    </delete>
+</mapper>

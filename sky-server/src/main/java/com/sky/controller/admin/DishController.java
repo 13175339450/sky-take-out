@@ -91,11 +91,22 @@ public class DishController {
     }
 
     /**
+     * 根据分类id查询菜品（为套餐管理的添加套餐服务）
+     */
+    @GetMapping("list")
+    @ApiOperation("根据categoryId查询菜品（为套餐管理的添加套餐服务）")
+    public Result<DishVO> queryByCategoryId(Long categoryId){
+        log.info("分类id: {}", categoryId);
+        Result result = dishService.queryByCategoryId(categoryId);
+        return result;
+    }
+    /**
      * 修改菜品
      */
     @PutMapping
     @ApiOperation("修改菜品")
-    public Result updateDish(@RequestBody DishDTO dishDTO){
+    public Result updateDish(@RequestBody DishDTO dishDTO) {
+
         Result result = dishService.updateDishInfo(dishDTO);
         return result;
     }
