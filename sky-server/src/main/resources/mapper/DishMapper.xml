@@ -48,6 +48,13 @@
             <if test="status != null">
                 status = #{status},
             </if>
+            <!-- 这里必须添加修改时间和修改用户 否则实体有数据 但数据没有写入数据库!!! -->
+            <if test="updateUser != null">
+                update_user = #{updateUser},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
         </set>
         where id = #{id}
     </update>

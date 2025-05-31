@@ -52,7 +52,7 @@ public class DishServiceImpl implements DishService {
         //1.2属性拷贝
         BeanUtils.copyProperties(dishDTO, dish);
         dish.setStatus(1);//设置状态为1
-        //1.3新增操作
+        //1.3新增操作 (使用AutoFill填充)
         int row1 = dishMapper.saveDish(dish);
 
         //2.1设置回显的菜品id
@@ -179,13 +179,13 @@ public class DishServiceImpl implements DishService {
         Dish dish = new Dish();
         BeanUtils.copyProperties(dishDTO, dish);
 
-        //2.更新数据 基本菜品信息数据
+        //2.更新数据 基本菜品信息数据 在dish菜品表里的数据 在这里使用AutoFill填充时间
         int row1 = dishMapper.updateDishBaseInfo(dish);
 
-        //3.删除旧的口味数据
+        //3.删除旧的口味数据 （在dish_flavor口味表里的数据）
         int row2 = dishFlavorMapper.deleteById(dishDTO.getId());
 
-        //4.获取新的口味信息
+        //4.获取新的口味信息 （前端提交的修改后的口味数据）
         List<DishFlavor> flavors = dishDTO.getFlavors();
 
         //5.将口味信息更新
@@ -194,7 +194,8 @@ public class DishServiceImpl implements DishService {
             for (DishFlavor flavor : flavors) {
                 flavor.setDishId(dishDTO.getId());
             }
-            //插入新的口味信息
+            //插入新的口味信息 （批量添加）
+            //批处理不能使用AutoFill 因为批处理返回的是List<entity> 但只能识别单个entity对象
             int row3 = dishFlavorMapper.saveBatch(flavors);
         }
 

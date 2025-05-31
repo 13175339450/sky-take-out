@@ -55,6 +55,7 @@ public interface DishMapper {
      * @param id
      * @return
      */
+
     int updateDishStatus(Integer status, Long id);
 
     /**

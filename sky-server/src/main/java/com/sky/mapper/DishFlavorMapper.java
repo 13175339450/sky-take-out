@@ -1,6 +1,9 @@
 package com.sky.mapper;
 
+import com.sky.annotaion.AutoFill;
 import com.sky.entity.DishFlavor;
+import com.sky.enumeration.OperationType;
+import io.swagger.v3.oas.annotations.Operation;
 
 import java.util.List;
 
@@ -10,6 +13,7 @@ public interface DishFlavorMapper {
      * @param flavors
      * @return
      */
+//    @AutoFill(OperationType.INSERT) 批量插入这里不能使用AutoFill填充 因为获取的是 entity集合！！
     int saveBatch(List<DishFlavor> flavors);
 
     /**
@@ -38,6 +42,7 @@ public interface DishFlavorMapper {
      * @param flavors
      * @return
      */
+    @AutoFill(OperationType.UPDATE)
     int updateFlavor(List<DishFlavor> flavors);
 
     /**
