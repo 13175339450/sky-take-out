@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: dev, aliOssInfo
+    active: dev, aliOssInfo, redisInfo #必须动态引入包 才能引用
   main:
     allow-circular-references: true
   datasource:
@@ -15,6 +15,36 @@ spring:
   servlet:
     multipart:
       max-file-size: 2MB #指定单个文件上传的大小
+  #配置Redis集群cluster
+  redis:
+    # Redis 密码，用于认证连接 默认连接0号数据库  共0~15
+    password: ${redis.password}
+
+    # Redis 集群配置
+    cluster:
+      # 集群节点列表，格式为 host:port
+      nodes:
+        - ${redis.cluster.nodes[0]}
+        - ${redis.cluster.nodes[1]}
+        - ${redis.cluster.nodes[2]}
+        - ${redis.cluster.nodes[3]}
+        - ${redis.cluster.nodes[4]}
+        - ${redis.cluster.nodes[5]}
+
+      # 最大重定向次数，用于处理 MOVED/ASK 错误
+      max-redirects: 3
+
+    # Lettuce 连接池配置优化 可以不用写
+    lettuce:
+      pool:
+        # 连接池最大活跃连接数
+        max-active: 8
+        # 连接池最大等待时间（负数表示无限等待）
+        max-wait: -1ms
+        # 连接池最大空闲连接数
+        max-idle: 8
+        # 连接池最小空闲连接数
+        min-idle: 0
 
 mybatis:
   #mapper配置文件 扫描
@@ -45,4 +75,3 @@ sky:
     access-key-id: ${sky.alioss.access-key-id}
     access-key-secret: ${sky.alioss.access-key-secret}
     bucket-name: ${sky.alioss.bucket-name}
-
