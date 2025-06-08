@@ -3,6 +3,7 @@ package com.sky.service;
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.result.Result;
+import com.sky.vo.DishVO;
 
 import java.util.List;
 
@@ -62,5 +63,5 @@ public interface DishService {
      * @param categoryId
      * @return
      */
-    Result queryUserByCategoryId(Long categoryId);
+    List<DishVO> queryUserByCategoryId(Long categoryId);
 }

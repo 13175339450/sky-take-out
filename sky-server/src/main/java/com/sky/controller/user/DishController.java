@@ -28,8 +28,8 @@ public class DishController {
         log.info("分类id: {}", categoryId);
 
         //查询起售中的菜品
-        Result result = dishService.queryUserByCategoryId(categoryId);
+        List<DishVO> dishVOS = dishService.queryUserByCategoryId(categoryId);
 
-        return result;
+        return Result.success(dishVOS);
     }
 }

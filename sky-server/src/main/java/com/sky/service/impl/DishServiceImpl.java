@@ -1,5 +1,6 @@
 package com.sky.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
@@ -17,6 +18,8 @@ import com.sky.service.DishService;
 import com.sky.vo.DishVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +40,8 @@ public class DishServiceImpl implements DishService {
     @Autowired
     private SetmealMapper setMealMapper;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 新增菜品和对应口味列表（甜辣温度）
@@ -220,15 +225,27 @@ public class DishServiceImpl implements DishService {
      * @return
      */
     @Override
-    public Result queryUserByCategoryId(Long categoryId) {
+    public List<DishVO> queryUserByCategoryId(Long categoryId) {
+        //1.先构造redis里的key
+        String key = "dish_" + categoryId;
+
+        //2.1先从redis里查询该key是否有值 反序列化
+        List<DishVO> dishVOS = (List<DishVO>) redisTemplate.opsForValue().get(key);
+
+        //有值直接返回
+        if(dishVOS != null) return dishVOS;
+
+        //无值先获取，再序列化
         //1.先根据分类id查 dish表 获取基本信息 （多组数据） 要求status=1的起售中的
         List<Dish> dishList = dishMapper.queryByCategoryId(categoryId);
+        System.out.println("yyyyyyy");
 
         //2.根据分类categoryId获取categoryName
         String categoryName = dishMapper.queryCategoryName(categoryId);
 
+        System.out.println("xxxxxx");
         //3.为每组数据查询相关口味信息 并且封装
-        ArrayList<DishVO> dishVOS = new ArrayList<>();
+        dishVOS = new ArrayList<>();
         for (Dish dish : dishList) {
             //3.1准备对应的实体类
             DishVO dishVO = new DishVO();
@@ -245,7 +262,10 @@ public class DishServiceImpl implements DishService {
             //3.6结果存储
             dishVOS.add(dishVO);
         }
+        //序列化
+        redisTemplate.opsForValue().set(key, dishVOS);
+
         //4.结果返回
-        return Result.success(dishVOS);
+        return dishVOS;
     }
 }
