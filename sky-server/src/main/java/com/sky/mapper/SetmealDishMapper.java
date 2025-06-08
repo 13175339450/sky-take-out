@@ -1,6 +1,7 @@
 package com.sky.mapper;
 
 import com.sky.entity.SetmealDish;
+import com.sky.vo.DishItemVO;
 
 import java.util.List;
 
@@ -33,4 +34,10 @@ public interface SetmealDishMapper {
      */
     int deleteBatchBySetmealId(List<Long> ids);
 
+    /**
+     * 根据setmealId查询包含的菜品
+     * @param id
+     * @return
+     */
+    List<DishItemVO> queryItemBySetmealId(Long id);
 }

@@ -82,4 +82,11 @@ public interface SetmealMapper {
      * @return
      */
     List<SetmealDish> queryBySetmealIdAndStatus(List<Long> ids);
+
+    /**
+     * 根据分类id查询套餐信息
+     * @param categoryId
+     * @return
+     */
+    List<Setmeal> queryByCategoryId(Long categoryId);
 }

@@ -18,6 +18,13 @@
         select * from setmeal_dish where setmeal_id = #{setmealId}
     </select>
 
+    <!-- 根据setmealId查询包含的菜品 -->
+    <select id="queryItemBySetmealId" resultType="com.sky.vo.DishItemVO">
+        select sd.copies copies, description, image, sd.name name from setmeal_dish sd left join dish d
+            on sd.dish_id = d.id
+                where sd.setmeal_id = #{setmealId};
+    </select>
+
     <!-- 根据setmealId删除相关联的菜品信息 -->
     <delete id="deleteBySetmealId">
         delete from setmeal_dish where setmeal_id = #{setmealId}

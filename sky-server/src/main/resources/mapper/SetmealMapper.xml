@@ -106,4 +106,9 @@
             #{ID}
         </foreach>
     </select>
+
+    <!-- 根据分类id查询套餐 起售中的 -->
+    <select id="queryByCategoryId" resultType="com.sky.entity.Setmeal">
+        select * from setmeal where category_id = #{categoryId} and status = 1;
+    </select>
 </mapper>

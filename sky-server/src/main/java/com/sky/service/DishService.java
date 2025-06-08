@@ -56,4 +56,11 @@ public interface DishService {
      * @return
      */
     Result queryByCategoryId(Long categoryId);
+
+    /**
+     * 根据分类categoryId在用户层查询相关信息
+     * @param categoryId
+     * @return
+     */
+    Result queryUserByCategoryId(Long categoryId);
 }

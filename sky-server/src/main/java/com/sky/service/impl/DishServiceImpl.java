@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -211,5 +212,40 @@ public class DishServiceImpl implements DishService {
     public Result queryByCategoryId(Long categoryId) {
         List<Dish> dishList = dishMapper.queryByCategoryId(categoryId);
         return Result.success(dishList);
+    }
+
+    /**
+     * 在用户端：根据分类categoryId查询相关信息
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public Result queryUserByCategoryId(Long categoryId) {
+        //1.先根据分类id查 dish表 获取基本信息 （多组数据） 要求status=1的起售中的
+        List<Dish> dishList = dishMapper.queryByCategoryId(categoryId);
+
+        //2.根据分类categoryId获取categoryName
+        String categoryName = dishMapper.queryCategoryName(categoryId);
+
+        //3.为每组数据查询相关口味信息 并且封装
+        ArrayList<DishVO> dishVOS = new ArrayList<>();
+        for (Dish dish : dishList) {
+            //3.1准备对应的实体类
+            DishVO dishVO = new DishVO();
+            //3.2赋值
+            BeanUtils.copyProperties(dish, dishVO);
+            //3.3封装categoryName
+            dishVO.setCategoryName(categoryName);
+
+            //3.4.查询对应的菜品口味 根据dishId
+            List<DishFlavor> dishFlavorList = dishFlavorMapper.queryFlavorById(dish.getId());
+            //3.5数据封装
+            dishVO.setFlavors(dishFlavorList);
+
+            //3.6结果存储
+            dishVOS.add(dishVO);
+        }
+        //4.结果返回
+        return Result.success(dishVOS);
     }
 }

@@ -73,4 +73,10 @@ public interface DishMapper {
     @AutoFill(OperationType.UPDATE)
     int updateDishBaseInfo(Dish dish);
 
+    /**
+     * 多表联查 获取分类名称
+     * @param categoryId
+     * @return
+     */
+    String queryCategoryName(Long categoryId);
 }

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.Path;
 
-@RestController
+@RestController("CategoryControllerAdmin")
 @RequestMapping("/admin/category")
 @Slf4j
 @Api(tags = "分类管理相关接口")

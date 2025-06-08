@@ -47,7 +47,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         registry.addInterceptor(jwtTokenUserInterceptor)//注册自定义的拦截器
                 .addPathPatterns("/user/**")
                 .excludePathPatterns("/user/user/login")//排除登录的token校验
-                .excludePathPatterns("user/shop/status");//排除获取商家状态的token校验
+                .excludePathPatterns("/user/shop/status");//排除获取商家状态的token校验
     }
 
     /**

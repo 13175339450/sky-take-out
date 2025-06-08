@@ -97,6 +97,12 @@
     <!-- 根据分类categoryId 查询是否绑定了菜品 -->
     <select id="queryByCategoryId" resultType="com.sky.entity.Dish">
         select * from dish
-        where category_id = #{categoryId}
+        where category_id = #{categoryId} and status = 1;
+    </select>
+
+    <!-- 多表联查 获取categoryName -->
+    <select id="queryCategoryName" resultType="java.lang.String">
+        select name from category
+            where id = #{categoryId}
     </select>
 </mapper>
