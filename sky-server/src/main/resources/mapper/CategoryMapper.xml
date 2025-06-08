@@ -35,12 +35,10 @@
 
     </select>
     <select id="queryByList" resultType="com.sky.entity.Category">
-        select * from category
-        <where>
+        select * from category where status = 1
             <if test="type != null">
-                type = #{type}
+                and type = #{type}
             </if>
-        </where>
     </select>
     <!-- 根据类型查询分类 -->
 
