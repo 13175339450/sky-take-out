@@ -37,6 +37,7 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- 这里也引入了 httpClient 的依赖包 -->
             <groupId>com.aliyun.oss</groupId>
             <artifactId>aliyun-sdk-oss</artifactId>
         </dependency>

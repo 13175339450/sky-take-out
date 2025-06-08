@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: dev, aliOssInfo, redisInfo #必须动态引入包 才能引用
+    active: dev, aliOssInfo, redisInfo, weChatInfo #必须动态引入包 才能引用
   main:
     allow-circular-references: true
   datasource:
@@ -36,6 +36,10 @@ spring:
 
     # Lettuce 连接池配置优化 可以不用写
     lettuce:
+      cluster:
+        refresh:
+          adaptive: true #支持集群拓扑动态感应刷新
+          period: 2000 #设置2s刷新一次
       pool:
         # 连接池最大活跃连接数
         max-active: 8
@@ -70,8 +74,19 @@ sky:
     admin-ttl: 2600000000
     # 设置前端传递过来的令牌名称
     admin-token-name: token
+
+    #用户端
+    user-secret-key: itheima
+    user-ttl: 2600000000
+    user-token-name: authentication
+
   alioss: #配置案例oss的配置信息
     endpoint: ${sky.alioss.endpoint}
     access-key-id: ${sky.alioss.access-key-id}
     access-key-secret: ${sky.alioss.access-key-secret}
     bucket-name: ${sky.alioss.bucket-name}
+
+  #微信小程序
+  wechat:
+    appid: ${sky.wechat.appid}
+    secret: ${sky.wechat.secret}
