@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace = *接口* 的全限定符 -->
+<mapper namespace="com.sky.mapper.ShoppingCartMapper">
+
+    <!-- 动态sql查询购物车信息 -->
+    <select id="list" resultType="com.sky.entity.ShoppingCart">
+        select * from shopping_cart
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="dishId != null">
+                and dish_id = #{dishId}
+            </if>
+            <if test="dishFlavor != null">
+                and dish_flavor = #{dishFlavor}
+            </if>
+            <if test="setmealId != null">
+                and setmeal_id = #{setmealId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 更新存在购物车的商品数量(增加或者减少) 菜品或套餐-->
+    <update id="updateShoppingCart">
+        update shopping_cart set number = #{number}
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="dishId != null">
+                and dish_id = #{dishId}
+            </if>
+            <if test="dishFlavor != null">
+                and dish_flavor = #{dishFlavor}
+            </if>
+            <if test="setmealId != null">
+                and setmeal_id = #{setmealId}
+            </if>
+        </where>
+    </update>
+
+    <!-- 新增一条购物车数据 -->
+    <insert id="insert">
+        insert into shopping_cart (name, image, user_id, dish_id, setmeal_id, dish_flavor, number, amount, create_time) values
+            (#{name}, #{image}, #{userId}, #{dishId}, #{setmealId}, #{dishFlavor}, #{number}, #{amount}, #{createTime})
+    </insert>
+
+    <!-- 获取菜品数量 -->
+    <select id="getNumber" resultType="java.lang.Integer">
+        select number from shopping_cart
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="dishId != null">
+                and dish_id = #{dishId}
+            </if>
+            <if test="dishFlavor != null">
+                and dish_flavor = #{dishFlavor}
+            </if>
+            <if test="setmealId != null">
+                and setmeal_id = #{setmealId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 删除指定菜品 -->
+    <delete id="deleteShoppingCart">
+        delete from shopping_cart
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="dishId != null">
+                and dish_id = #{dishId}
+            </if>
+            <if test="dishFlavor != null">
+                and dish_flavor = #{dishFlavor}
+            </if>
+            <if test="setmealId != null">
+                and setmeal_id = #{setmealId}
+            </if>
+        </where>
+    </delete>
+</mapper>

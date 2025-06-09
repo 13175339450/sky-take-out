@@ -89,4 +89,12 @@ public interface SetmealMapper {
      * @return
      */
     List<Setmeal> queryByCategoryId(Long categoryId);
+
+    /**
+     * 根据setmealId查询套餐信息
+     * @param setmealId
+     * @return
+     */
+    Setmeal queryOneById(Long setmealId);
+
 }

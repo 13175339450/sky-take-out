@@ -111,4 +111,9 @@
     <select id="queryByCategoryId" resultType="com.sky.entity.Setmeal">
         select * from setmeal where category_id = #{categoryId} and status = 1;
     </select>
+
+    <!-- 根据setmealId查询套餐的信息 -->
+    <select id="queryOneById" resultType="com.sky.entity.Setmeal">
+        select * from setmeal where id = #{setmealId}
+    </select>
 </mapper>
