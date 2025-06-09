@@ -1,5 +1,6 @@
 package com.sky.controller.admin;
 
+import com.sky.constant.RedisCacheConstant;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.result.PageResult;
@@ -10,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +30,7 @@ public class SetmealController {
      */
     @PostMapping
     @ApiOperation("新增套餐")
+    @CacheEvict(cacheNames = RedisCacheConstant.SET_MEAL_CACHE_CATEGORY_ID, key = "#setmealDTO.categoryId")
     public Result insertSetMeal(@RequestBody SetmealDTO setmealDTO) {
         Result result = setMealService.insertSetMeal(setmealDTO);
         return result;
@@ -49,6 +52,7 @@ public class SetmealController {
      */
     @PostMapping("status/{status}")
     @ApiOperation("套餐起售停售")
+    @CacheEvict(cacheNames = RedisCacheConstant.SET_MEAL_CACHE_CATEGORY_ID, allEntries = true)
     public Result startOrStop(@PathVariable Integer status, Long id) {
         Result result = setMealService.startOrStop(status, id);
         return result;
@@ -69,6 +73,7 @@ public class SetmealController {
      */
     @PutMapping
     @ApiOperation("修改套餐")
+    @CacheEvict(cacheNames = RedisCacheConstant.SET_MEAL_CACHE_CATEGORY_ID, allEntries = true)
     public Result updateSetmeal(@RequestBody SetmealDTO dto){
         Result result = setMealService.updateSetmeal(dto);
         return result;
@@ -79,6 +84,7 @@ public class SetmealController {
      */
     @DeleteMapping
     @ApiOperation("批量删除套餐")
+    @CacheEvict(cacheNames = RedisCacheConstant.SET_MEAL_CACHE_CATEGORY_ID, allEntries = true)
     public Result deleteByIds(@RequestParam List<Long> ids){
         Result result = setMealService.deleteBatchById(ids);
         return result;

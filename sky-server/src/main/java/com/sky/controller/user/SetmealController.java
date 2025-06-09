@@ -1,5 +1,6 @@
 package com.sky.controller.user;
 
+import com.sky.constant.RedisCacheConstant;
 import com.sky.entity.Setmeal;
 import com.sky.result.Result;
 import com.sky.service.SetmealService;
@@ -9,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +29,7 @@ public class SetmealController {
 
     @GetMapping("list")
     @ApiOperation("根据分类id查询套餐信息")
+    @Cacheable(cacheNames = RedisCacheConstant.SET_MEAL_CACHE_CATEGORY_ID, key = "#categoryId") //从redis里查找缓存 (categoryId 相关的)
     public Result<List<Setmeal>> queryById(Long categoryId){
         log.info("分类id: {}", categoryId);
         //起售中的套餐
