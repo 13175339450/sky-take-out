@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace = *接口* 的全限定符 -->
+<mapper namespace="com.sky.mapper.AddressBookMapper">
+    <!-- 查询当前用户的所有地址 也可以是单个-->
+    <select id="showAddressBook" resultType="com.sky.entity.AddressBook">
+        select * from address_book
+            <where>
+                <if test="userId != null">
+                    and user_id = #{userId}
+                </if>
+                <if test="id != null">
+                    and id = #{id}
+                </if>
+                <if test="isDefault != null">
+                    and is_default = #{isDefault}
+                </if>
+            </where>
+    </select>
+
+    <!-- 新增地址 -->
+    <insert id="insertAddress">
+        insert into address_book(user_id, consignee, sex, phone, province_code, province_name, city_code, city_name, district_code, district_name,  detail, label, is_default)
+                values(#{userId}, #{consignee}, #{sex}, #{phone}, #{provinceCode}, #{provinceName}, #{cityCode}, #{cityName}, #{districtCode}, #{districtName}, #{detail}, #{label}, #{isDefault})
+    </insert>
+
+    <!-- 清空用户所有地址的默认属性 -->
+    <update id="cleanDefault">
+        update address_book set is_default = 0 where user_id = #{userId}
+    </update>
+
+    <update id="setDefaultAddress">
+        update address_book set is_default = 1 where id = #{id}
+    </update>
+
+    <!-- 获取修改前地址的默认状态 -->
+    <select id="getDefaultStatus" resultType="java.lang.Integer">
+        select is_default from address_book where id = #{id}
+    </select>
+
+    <!-- 查询默认地址 -->
+    <select id="showDefaultAddress" resultType="com.sky.entity.AddressBook">
+        select * from address_book where user_id = #{userId} and is_default = 1;
+    </select>
+
+    <!-- 根据id删除地址 -->
+    <delete id="deleteAddressById">
+        delete from address_book where id = #{id}
+    </delete>
+</mapper>
