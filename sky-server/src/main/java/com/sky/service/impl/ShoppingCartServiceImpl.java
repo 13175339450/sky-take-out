@@ -2,12 +2,8 @@ package com.sky.service.impl;
 
 import com.sky.context.BaseContext;
 import com.sky.dto.ShoppingCartDTO;
-import com.sky.entity.Dish;
-import com.sky.entity.Setmeal;
-import com.sky.entity.ShoppingCart;
-import com.sky.mapper.DishMapper;
-import com.sky.mapper.SetmealMapper;
-import com.sky.mapper.ShoppingCartMapper;
+import com.sky.entity.*;
+import com.sky.mapper.*;
 import com.sky.service.ShoppingCartService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,6 +23,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private DishMapper dishMapper;
     @Autowired
     private SetmealMapper setmealMapper;
+    @Autowired
+    private OrderMapper orderMapper;
+    @Autowired
+    private OrderDetailMapper orderDetailMapper;
 
     @Override
     public void addShoppingCart(ShoppingCartDTO shoppingCartDTO) {
@@ -38,15 +39,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         shoppingCart.setUserId(BaseContext.getCurrentId());
         //1.4根据结果 用动态sql去查询数据 (返回的数据要么为null 要么只有一个实体)
         List<ShoppingCart> shoppingCarts = shoppingCartMapper.list(shoppingCart);
-
         //2.如果已经存在 则 数量+1 (不论菜品或者套餐 动态sql)
-        if(shoppingCarts != null && shoppingCarts.size() > 0){
+        if (shoppingCarts != null && shoppingCarts.size() > 0) {
             //数量 + 1
             shoppingCarts.get(0).setNumber(shoppingCarts.get(0).getNumber() + 1);
             int row1 = shoppingCartMapper.updateShoppingCart(shoppingCarts.get(0));
         } else {
             //3.不存在 -> (当前已经有 DTO了，继续加入数据)
-            if(shoppingCart.getDishId() != null){
+            if (shoppingCart.getDishId() != null) {
                 //3.1 如果新添加的是菜品
                 //1.查询菜品的其他信息 name、image、amount 根据dishId
                 Dish dish = dishMapper.queryById(shoppingCart.getDishId());
@@ -75,6 +75,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     /**
      * 查看购物车
+     *
      * @return
      */
     @Override
@@ -102,6 +103,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     /**
      * 删除购物车
+     *
      * @param shoppingCartDTO
      */
     @Override
@@ -117,7 +119,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         //3.判断当前number数量是否为1
         int number = shoppingCartMapper.getNumber(shoppingCart);
-        if(number > 1){
+        if (number > 1) {
             //执行更新操作
             shoppingCart.setNumber(number - 1);
             int row = shoppingCartMapper.updateShoppingCart(shoppingCart);
@@ -125,5 +127,31 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             //执行删除操作
             int row = shoppingCartMapper.deleteShoppingCart(shoppingCart);
         }
+    }
+
+    /**
+     * 再来一单
+     *
+     * @param id
+     */
+    @Override
+    public void repetition(Long id) {
+        ArrayList<ShoppingCart> shoppingCarts = new ArrayList<>();
+
+        //根据订单id 将订单和订单明细添加到购物车表里
+        List<OrderDetail> orderDetailList = orderDetailMapper.queryDetailByOrderId(id);//查询订单明细
+        for (OrderDetail orderDetail : orderDetailList) {
+            ShoppingCart shoppingCart = new ShoppingCart();
+            //属性拷贝
+            BeanUtils.copyProperties(orderDetail, shoppingCart);
+            //设置其他属性
+            shoppingCart.setCreateTime(LocalDateTime.now());//创建时间
+            shoppingCart.setUserId(BaseContext.getCurrentId());//userId
+            //加入批量
+            shoppingCarts.add(shoppingCart);
+        }
+
+        //批量插入到购物车里
+        int row = shoppingCartMapper.insertBatch(shoppingCarts);
     }
 }

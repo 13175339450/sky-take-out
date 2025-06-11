@@ -86,4 +86,15 @@
             </if>
         </where>
     </delete>
+
+    <!-- 再来一单 批量加入购物车 -->
+    <insert id="insertBatch">
+        insert into shopping_cart (name, image, user_id, dish_id, setmeal_id,
+                                   dish_flavor, amount, create_time, number) values
+                    <foreach collection="shoppingCarts" item="sc" separator=",">
+                        (#{sc.name}, #{sc.image}, #{sc.userId}, #{sc.dishId}, #{sc.setmealId},
+                        #{sc.dishFlavor}, #{sc.amount}, #{sc.createTime}, #{sc.number})
+                    </foreach>
+    </insert>
+
 </mapper>

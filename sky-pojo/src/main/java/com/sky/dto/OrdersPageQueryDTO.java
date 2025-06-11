@@ -13,6 +13,7 @@ public class OrdersPageQueryDTO implements Serializable {
 
     private int pageSize;
 
+    //订单号
     private String number;
 
     private  String phone;

@@ -29,4 +29,10 @@ public interface ShoppingCartService {
      * @param shoppingCartDTO
      */
     void deleteShoppingCart(ShoppingCartDTO shoppingCartDTO);
+
+    /**
+     * 再来一单
+     * @param id
+     */
+    void repetition(Long id);
 }

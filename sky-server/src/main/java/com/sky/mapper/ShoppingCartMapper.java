@@ -3,6 +3,7 @@ package com.sky.mapper;
 import com.sky.entity.ShoppingCart;
 import org.apache.ibatis.annotations.Delete;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface ShoppingCartMapper {
@@ -45,4 +46,12 @@ public interface ShoppingCartMapper {
      * @return
      */
     int deleteShoppingCart(ShoppingCart shoppingCart);
+
+    /**
+     * 批量插入购物车
+     * @param shoppingCarts
+     * @return
+     */
+    int insertBatch(ArrayList<ShoppingCart> shoppingCarts);
+
 }

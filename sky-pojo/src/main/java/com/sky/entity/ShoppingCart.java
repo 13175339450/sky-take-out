@@ -37,8 +37,8 @@ public class ShoppingCart implements Serializable {
     //口味
     private String dishFlavor;
 
-    //数量
-    private Integer number;
+    //数量 默认为0
+    private Integer number = 0;
 
     //金额
     private BigDecimal amount;
