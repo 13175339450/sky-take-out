@@ -5,10 +5,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
-import com.sky.dto.OrdersCancelDTO;
-import com.sky.dto.OrdersPageQueryDTO;
-import com.sky.dto.OrdersPaymentDTO;
-import com.sky.dto.OrdersSubmitDTO;
+import com.sky.dto.*;
 import com.sky.entity.*;
 import com.sky.exception.AddressBookBusinessException;
 import com.sky.exception.OrderBusinessException;
@@ -320,7 +317,45 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void AdminCancelOrder(OrdersCancelDTO ordersCancelDTO) {
         //商家取消订单 并且 添加取消的理由
-        orderMapper.AdminCancelReson(ordersCancelDTO);
+        orderMapper.AdminCancelReason(ordersCancelDTO);
+    }
+
+    /**
+     * 派送订单
+     * @param id
+     */
+    @Override
+    public void deliveryOrder(Long id) {
+        //设置订单状态
+        int row = orderMapper.deliveryOrder(id);
+    }
+
+    /**
+     * 商家接单
+     * @param ordersConfirmDTO
+     */
+    @Override
+    public void confirmOrder(OrdersConfirmDTO ordersConfirmDTO) {
+        ordersConfirmDTO.setStatus(3);//设置状态为已接单
+        orderMapper.confirmOrder(ordersConfirmDTO);
+    }
+
+    /**
+     * 完成订单
+     * @param id
+     */
+    @Override
+    public void completeOrder(Long id) {
+        orderMapper.completeOrder(id);
+    }
+
+    /**
+     * 商家拒单
+     * @param ordersRejectionDTO
+     */
+    @Override
+    public void rejectOrder(OrdersRejectionDTO ordersRejectionDTO) {
+        orderMapper.rejectOrder(ordersRejectionDTO);
     }
 
 

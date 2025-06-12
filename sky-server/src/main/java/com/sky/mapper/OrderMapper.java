@@ -2,7 +2,9 @@ package com.sky.mapper;
 
 import com.github.pagehelper.Page;
 import com.sky.dto.OrdersCancelDTO;
+import com.sky.dto.OrdersConfirmDTO;
 import com.sky.dto.OrdersPageQueryDTO;
+import com.sky.dto.OrdersRejectionDTO;
 import com.sky.entity.Orders;
 import com.sky.vo.OrderStatisticsVO;
 import org.apache.ibatis.annotations.Param;
@@ -72,5 +74,31 @@ public interface OrderMapper {
      * 商家取消订单 并且添加理由
      * @param ordersCancelDTO
      */
-    void AdminCancelReson(OrdersCancelDTO ordersCancelDTO);
+    void AdminCancelReason(OrdersCancelDTO ordersCancelDTO);
+
+    /**
+     * 派送订单
+     * @param id
+     * @return
+     */
+    int deliveryOrder(Long id);
+
+    /**
+     * 接单 （配送时间是下单时用户确定的）
+     * @param ordersConfirmDTO
+     */
+    @Update("update orders set status = #{status} where id = #{id}")
+    void confirmOrder(OrdersConfirmDTO ordersConfirmDTO);
+
+    /**
+     * 完成订单
+     * @param id
+     */
+    void completeOrder(Long id);
+
+    /**
+     * 商家拒单
+     * @param ordersRejectionDTO
+     */
+    void rejectOrder(OrdersRejectionDTO ordersRejectionDTO);
 }
