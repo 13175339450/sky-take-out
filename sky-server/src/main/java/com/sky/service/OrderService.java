@@ -49,12 +49,6 @@ public interface OrderService {
     void cancelOrder(Long id);
 
     /**
-     * 用户催单
-     * @param id
-     */
-    void reminderOrder(Long id);
-
-    /**
      * 分页查询 + 订单搜索
      * @param ordersPageQueryDTO
      * @return
@@ -103,4 +97,10 @@ public interface OrderService {
      * @param ordersRejectionDTO
      */
     void rejectOrder(OrdersRejectionDTO ordersRejectionDTO);
+
+    /**
+     * 用户催单
+     * @param id
+     */
+    void reminderOrder(Long id);
 }

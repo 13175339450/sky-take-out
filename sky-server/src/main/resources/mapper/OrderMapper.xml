@@ -119,7 +119,7 @@
 
     <!-- 对超时且未付款的订单进行相关信息的修改 批量修改 这里采用 &lt; 代替 < -->
     <update id="dealNoPayOrderBatch">
-        update orders set status = 6, cancel_time = now(),
+        update orders set status = 7, cancel_time = now(),
         cancel_reason = "付款时间超时,订单已取消!"
         where status = #{status} and order_time &lt; #{time}
     </update>
