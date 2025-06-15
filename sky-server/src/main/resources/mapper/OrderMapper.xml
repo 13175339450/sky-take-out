@@ -120,15 +120,15 @@
     <!-- 对超时且未付款的订单进行相关信息的修改 批量修改 这里采用 &lt; 代替 < -->
     <update id="dealNoPayOrderBatch">
         update orders set status = 6, cancel_time = now(),
-            cancel_reason = "付款时间超时,订单已取消!"
-                where status = #{status} and order_time &lt; #{time}
+        cancel_reason = "付款时间超时,订单已取消!"
+        where status = #{status} and order_time &lt; #{time}
     </update>
 
     <!-- 对前一天里正在配送的订单的信息进行修改 -->
     <update id="dealDeliveryOrderBatch">
         update orders set status = 5, delivery_status = 1,
-            delivery_time = now()
-                where status = #{status} and
-                    order_time between #{beforeTime} and #{afterTime}
+        delivery_time = now()
+        where status = #{status} and
+        order_time between #{beforeTime} and #{afterTime}
     </update>
 </mapper>

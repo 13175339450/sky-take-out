@@ -101,6 +101,7 @@
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
 
+        <!-- webSocket 双向传输的依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>

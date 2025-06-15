@@ -118,4 +118,10 @@ public interface OrderMapper {
      * @param afterTime
      */
     void dealDeliveryOrderBatch(Integer status, LocalDateTime beforeTime, LocalDateTime afterTime);
+
+    /**
+     * 改编版的用户下单功能里的 修改方法
+     */
+    @Update("update orders set status = #{orderStatus},pay_status = #{orderPaidStatus} ,checkout_time = #{checkOutTime} where id = #{id}")
+    void updateStatus(Integer orderStatus, Integer orderPaidStatus, LocalDateTime checkOutTime, Long id);
 }
