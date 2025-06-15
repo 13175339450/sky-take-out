@@ -13,22 +13,18 @@ import com.sky.exception.OrderBusinessException;
 import com.sky.exception.ShoppingCartBusinessException;
 import com.sky.mapper.*;
 import com.sky.result.PageResult;
-import com.sky.result.Result;
 import com.sky.service.OrderService;
 import com.sky.utils.WeChatPayUtil;
-import com.sky.vo.OrderPaymentVO;
-import com.sky.vo.OrderStatisticsVO;
-import com.sky.vo.OrderSubmitVO;
-import com.sky.vo.OrderVO;
+import com.sky.vo.*;
 import com.sky.webSocket.WebSocketServer;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -188,8 +184,8 @@ public class OrderServiceImpl implements OrderService {
         //1.相应内容封装 type、orderId、订单号
         Map map = new HashMap();
         map.put("type", 1);//1表示来单提醒 2表示客户催单
-        map.put("orderId",this.orders.getId());
-        map.put("content","订单号："+this.orders.getNumber());
+        map.put("orderId", this.orders.getId());
+        map.put("content", "订单号：" + this.orders.getNumber());
         //2.转换为JSON格式
         String json = JSON.toJSONString(map);
         //3.发送给服务端
@@ -198,6 +194,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 分页查询用户历史订单
+     *
      * @param ordersPageQueryDTO
      * @return
      */
@@ -243,6 +240,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 查询订单详情
+     *
      * @param id 订单id
      * @return
      */
@@ -262,6 +260,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 取消订单
+     *
      * @param id 订单id
      */
     @Override
@@ -271,6 +270,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 分页查询 + 订单搜索 （商家）
+     *
      * @param ordersPageQueryDTO
      * @return
      */
@@ -307,6 +307,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 查询订单详情
+     *
      * @param id 订单id
      * @return
      */
@@ -330,6 +331,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 统计各个状态的订单数量
+     *
      * @return
      */
     @Override
@@ -351,6 +353,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 派送订单
+     *
      * @param id
      */
     @Override
@@ -361,6 +364,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 商家接单
+     *
      * @param ordersConfirmDTO
      */
     @Override
@@ -371,6 +375,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 完成订单
+     *
      * @param id
      */
     @Override
@@ -380,6 +385,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 商家拒单
+     *
      * @param ordersRejectionDTO
      */
     @Override
@@ -390,6 +396,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 用户催单
+     *
      * @param id
      */
     @Override
@@ -397,7 +404,7 @@ public class OrderServiceImpl implements OrderService {
         //根据订单id查数据
         Orders ordersDB = orderMapper.queryById(id);
 
-        if(ordersDB == null){
+        if (ordersDB == null) {
             throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
         }
 
