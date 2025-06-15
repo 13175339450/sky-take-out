@@ -11,6 +11,8 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.time.LocalDateTime;
+
 public interface OrderMapper {
     /**
      * 主键回显
@@ -101,4 +103,19 @@ public interface OrderMapper {
      * @param ordersRejectionDTO
      */
     void rejectOrder(OrdersRejectionDTO ordersRejectionDTO);
+
+    /**
+     * 对超时未付款订单进行 批量修改信息
+     * @param status
+     * @param time
+     */
+    void dealNoPayOrderBatch(Integer status, LocalDateTime time);
+
+    /**
+     * 批量处理 昨天的订单里 待派送的订单信息
+     * @param status
+     * @param beforeTime
+     * @param afterTime
+     */
+    void dealDeliveryOrderBatch(Integer status, LocalDateTime beforeTime, LocalDateTime afterTime);
 }
