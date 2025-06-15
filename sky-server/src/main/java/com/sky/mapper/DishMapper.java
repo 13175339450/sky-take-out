@@ -8,6 +8,7 @@ import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
 import com.sky.enumeration.OperationType;
 import com.sky.vo.DishVO;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -79,4 +80,7 @@ public interface DishMapper {
      * @return
      */
     String queryCategoryName(Long categoryId);
+
+    @Select("select count(*) from dish where status = #{status}")
+    Integer getDishStatusCount(int status);
 }

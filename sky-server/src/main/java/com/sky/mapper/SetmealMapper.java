@@ -7,6 +7,7 @@ import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
 import com.sky.enumeration.OperationType;
 import com.sky.vo.SetmealVO;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -97,4 +98,6 @@ public interface SetmealMapper {
      */
     Setmeal queryOneById(Long setmealId);
 
+    @Select("select count(*) from setmeal where status = #{status}")
+    Integer getSetmealStatusCount(int status);
 }

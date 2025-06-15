@@ -6,11 +6,36 @@
 <mapper namespace="com.sky.mapper.UserMapper">
     <!-- 插入用户的基本信息 并进行主键回显-->
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
-        insert into user(openid, name, phone, sex, id_number, avatar, create_time) values
-        (#{openid}, #{name}, #{phone}, #{sex}, #{idNumber}, #{avatar}, #{createTime})
+        insert into user(openid, name, phone, sex, id_number, avatar, create_time)
+        values (#{openid}, #{name}, #{phone}, #{sex}, #{idNumber}, #{avatar}, #{createTime})
     </insert>
     <!-- 根据openid查询用户信息 -->
     <select id="queryUserByOpenid" resultType="com.sky.entity.User">
         select * from user where openid = #{openid}
+    </select>
+
+    <!-- 根据时间范围去查询对应的用户数量 -->
+    <select id="getUserNumberByTime" resultType="java.lang.Integer">
+        select count(*) from user
+        <where>
+            <if test="begin != null">
+                and create_time &gt;= #{begin}
+            </if>
+            <if test="end != null">
+                and create_time &lt;= #{end}
+            </if>
+        </where>
+    </select>
+
+    <select id="getNewUserCount" resultType="java.lang.Integer">
+        select count(*) from user
+            <where>
+                <if test="begin != null">
+                    and create_time &gt;= #{begin}
+                </if>
+                <if test="end != null">
+                    and create_time &lt;= #{end}
+                </if>
+            </where>
     </select>
 </mapper>

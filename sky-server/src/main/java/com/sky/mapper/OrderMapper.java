@@ -1,10 +1,7 @@
 package com.sky.mapper;
 
 import com.github.pagehelper.Page;
-import com.sky.dto.OrdersCancelDTO;
-import com.sky.dto.OrdersConfirmDTO;
-import com.sky.dto.OrdersPageQueryDTO;
-import com.sky.dto.OrdersRejectionDTO;
+import com.sky.dto.*;
 import com.sky.entity.Orders;
 import com.sky.vo.OrderStatisticsVO;
 import org.apache.ibatis.annotations.Param;
@@ -12,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 public interface OrderMapper {
@@ -127,9 +125,16 @@ public interface OrderMapper {
     void updateStatus(Integer orderStatus, Integer orderPaidStatus, LocalDateTime checkOutTime, Long id);
 
     /**
-     * 统计每天的营业额 动态语句
+     * 查询时间范围内的有效订单数
      * @param map
      * @return
      */
-    Double turnoverStatistic(Map map);
+    Integer getValidOrderCount(Map map);
+
+    //根据动态条件统计订单数量
+    Integer countByMap(Map map);
+
+
+    //统计指定时间区间内的销量排名前10
+    List<GoodsSalesDTO> getSalesTop10(LocalDateTime begin,LocalDateTime end);
 }
