@@ -19,4 +19,9 @@
             </if>
         </where>
     </select>
+
+    <!-- 查询指定区间内的商业数据 -->
+    <select id="getStatistics" resultType="com.sky.vo.BusinessDataVO">
+
+    </select>
 </mapper>

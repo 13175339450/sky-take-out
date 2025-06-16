@@ -33,8 +33,11 @@ public class WorkspaceServiceImpl implements WorkspaceService {
      * 查询今日数据
      */
     @Override
-    public BusinessDataVO getTodayBusinessData() {
-        Map map = setToday();
+    public BusinessDataVO getBusinessData(LocalDateTime begin, LocalDateTime end) {
+        Map map = new HashMap();
+        map.put("begin", begin);
+        map.put("end", end);
+        map.put("status", Orders.COMPLETED);
         map.put("status", Orders.COMPLETED);
 
         //获取今日营业额
@@ -49,9 +52,10 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         //获取总订单数
         map.put("status", null);
         Integer orderTotal = orderMapper.countByMap(map);
+        if (orderTotal == null) orderTotal = 0;
         //计算订单完成率
         Double orderCompletionRate = 0.0;
-        if (orderTotal != null)
+        if (orderTotal != null && orderTotal != 0)
             orderCompletionRate = validOrderCount * 1.0 / orderTotal;
 
         //计算平均客单价
